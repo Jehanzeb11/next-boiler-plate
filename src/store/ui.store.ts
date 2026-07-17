@@ -21,17 +21,13 @@ interface UIActions {
 export const useUIStore = create<UIState & UIActions>()(
   devtools(
     (set) => ({
-      // State
       sidebarOpen: true,
       theme: "system",
 
-      // Actions
       toggleSidebar: () =>
         set((s) => ({ sidebarOpen: !s.sidebarOpen }), false, "ui/toggleSidebar"),
-
       setSidebarOpen: (open) =>
         set({ sidebarOpen: open }, false, "ui/setSidebarOpen"),
-
       setTheme: (theme) =>
         set({ theme }, false, "ui/setTheme"),
     }),

@@ -2,13 +2,12 @@
 // ---------------------------------------------------------------------------
 // useCurrentUser
 //
-// Fetches the current user from the internal /api/auth/me route (which works
-// in both demo and production mode) and syncs the result into Zustand.
+// Fetches the current user from /api/auth/me and syncs the result into Zustand.
 // ---------------------------------------------------------------------------
 import { useQuery } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { queryKeys } from "@/lib/query-keys"
-import { useAuthStore } from "@/store"
+import { useAuthStore } from "@/features/auth/store"
 import type { User } from "@/types"
 
 async function fetchMe(): Promise<User> {

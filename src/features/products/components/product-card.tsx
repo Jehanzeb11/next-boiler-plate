@@ -1,6 +1,6 @@
 // Server Component — no "use client" needed, no JS shipped for this UI
 import Image from "next/image"
-import type { Product } from "@/actions/products"
+import type { Product } from "@/features/products/services"
 
 interface ProductCardProps {
   product: Product
@@ -41,9 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-lg font-bold text-zinc-900 dark:text-white">
             ${product.price.toFixed(2)}
           </span>
-
           <div className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {/* Star icon (inline SVG — zero extra dependencies) */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"

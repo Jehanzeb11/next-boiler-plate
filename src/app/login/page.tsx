@@ -1,13 +1,12 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { LoginForm } from "@/components/auth/login-form"
+import { LoginForm } from "@/features/auth/components/login-form"
+import { APP_NAME } from "@/constants"
 
 export const metadata: Metadata = {
-  title: "Sign In — LI Boomers Panel",
+  title: `Sign In — ${APP_NAME}`,
 }
 
-// LoginForm uses useSearchParams() internally which requires a Suspense boundary
-// in the App Router.  The fallback matches the form's height to prevent CLS.
 function LoginFormSkeleton() {
   return (
     <div className="space-y-5 animate-pulse">
@@ -28,17 +27,15 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4">
       <div className="w-full max-w-sm">
-        {/* Wordmark */}
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            LI Boomers Panel
+            {APP_NAME}
           </h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Sign in to your account to continue
           </p>
         </div>
 
-        {/* Card */}
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm p-8">
           <Suspense fallback={<LoginFormSkeleton />}>
             <LoginForm />

@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Demo accounts — server-only
-// Used when no backend is configured. Remove once your backend is live.
+// Used when NEXT_PUBLIC_API_BASE_URL is not set. Remove once backend is live.
 // ---------------------------------------------------------------------------
 import "server-only"
 import type { User } from "@/types"

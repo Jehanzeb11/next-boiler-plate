@@ -1,6 +1,4 @@
-// Route-level loading fallback — Next.js automatically wraps page.tsx in a
-// Suspense boundary using this file. Shown during initial navigation to "/".
-import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton"
+import { ProductGridSkeleton } from "@/features/products/components/product-grid-skeleton"
 
 export default function Loading() {
   return (

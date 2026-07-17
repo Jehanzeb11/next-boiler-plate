@@ -6,16 +6,14 @@
 // Never expose this to cross-origin requests.
 // ---------------------------------------------------------------------------
 import { NextResponse } from "next/server"
-import { getSession } from "@/lib/session"
+import { getSession } from "@/server/session"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
   const session = await getSession()
-
   if (!session?.accessToken) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 })
   }
-
   return NextResponse.json({ accessToken: session.accessToken })
 }

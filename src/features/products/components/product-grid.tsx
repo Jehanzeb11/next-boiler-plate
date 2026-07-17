@@ -1,9 +1,8 @@
 // Server Component
-import { getProducts } from "@/actions/products"
+import { getProducts } from "@/features/products/services"
 import { ProductCard } from "./product-card"
 
 export async function ProductGrid() {
-  // Called on the server — data never touches the client bundle
   const products = await getProducts()
 
   return (

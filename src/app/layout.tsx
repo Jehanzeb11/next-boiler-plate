@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Providers } from "@/components/providers"
 import { ConditionalHeader } from "@/components/layout/conditional-header"
+import { APP_NAME, APP_DESCRIPTION } from "@/constants"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "LI Boomers Panel",
-  description: "Admin panel",
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
 }
 
 export default function RootLayout({
@@ -29,9 +30,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>
-          {/* ConditionalHeader reads the session and only renders on
-              authenticated routes — hidden on /login automatically because
-              the proxy redirects unauthenticated requests there before render. */}
           <ConditionalHeader />
           {children}
         </Providers>

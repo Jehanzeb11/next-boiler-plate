@@ -1,25 +1,13 @@
 // ---------------------------------------------------------------------------
-// Products — server-side data fetching
+// Products — server-side data fetching service
 // Plain async functions called directly in Server Components.
-// Swap the BASE_URL for your real backend when it's ready.
+// Swap BASE_URL for your real backend when it's ready.
 // ---------------------------------------------------------------------------
+import type { Product } from "@/types"
+
+export type { Product, ProductRating } from "@/types"
 
 const BASE_URL = "https://fakestoreapi.com"
-
-export interface ProductRating {
-  rate: number
-  count: number
-}
-
-export interface Product {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
-  rating: ProductRating
-}
 
 async function apiFetch<T>(path: string, revalidate = 60): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {

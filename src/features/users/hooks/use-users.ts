@@ -3,7 +3,7 @@
 // TanStack Query hooks for the /users resource
 // ---------------------------------------------------------------------------
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
+import { apiClient } from "@/server/api-client"
 import { queryKeys } from "@/lib/query-keys"
 import type { User } from "@/types"
 
@@ -30,7 +30,6 @@ export function useUser(id: string) {
 
 export function useCreateUser() {
   const qc = useQueryClient()
-
   return useMutation({
     mutationFn: (payload: Omit<User, "id" | "createdAt">) =>
       apiClient.post<User, typeof payload>("/users", payload),
@@ -42,7 +41,6 @@ export function useCreateUser() {
 
 export function useUpdateUser(id: string) {
   const qc = useQueryClient()
-
   return useMutation({
     mutationFn: (payload: Partial<Omit<User, "id" | "createdAt">>) =>
       apiClient.patch<User, typeof payload>(`/users/${id}`, payload),
@@ -57,7 +55,6 @@ export function useUpdateUser(id: string) {
 
 export function useDeleteUser() {
   const qc = useQueryClient()
-
   return useMutation({
     mutationFn: (id: string) => apiClient.delete<void>(`/users/${id}`),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.users.all }),

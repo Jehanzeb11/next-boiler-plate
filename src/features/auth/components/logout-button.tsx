@@ -1,9 +1,9 @@
 "use client"
 
 import { useTransition } from "react"
-import { logout } from "@/actions/auth"
+import { logout } from "@/features/auth/actions"
 import { LogOut } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 export function LogoutButton({ className }: { className?: string }) {
   const [isPending, startTransition] = useTransition()

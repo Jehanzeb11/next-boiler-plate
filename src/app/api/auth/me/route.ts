@@ -2,24 +2,15 @@
 // GET /api/auth/me
 //
 // Two modes:
-//   • Demo  — decodes the demo token locally and returns the profile.
+//   • Demo  — verifies the signed identity JWT and returns the profile.
 //   • Production — proxies to the backend GET /auth/me.
 // ---------------------------------------------------------------------------
 import { NextResponse } from "next/server"
-import { jwtVerify } from "jose"
-import { getSession } from "@/lib/session"
+import { getSession, verifyIdentityToken } from "@/server/session"
+import { IS_DEMO_MODE, API_BASE_URL } from "@/constants"
 import type { User } from "@/types"
 
 export const dynamic = "force-dynamic"
-
-const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim()
-const IS_DEMO = API_BASE === ""
-
-function getKey(): Uint8Array {
-  const secret = process.env.SESSION_SECRET?.trim()
-  if (!secret) throw new Error("SESSION_SECRET is not set.")
-  return new TextEncoder().encode(secret)
-}
 
 export async function GET() {
   const session = await getSession()
@@ -27,37 +18,30 @@ export async function GET() {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 })
   }
 
-  // ── Demo mode: decode the locally-minted token ────────────────────────────
-  if (IS_DEMO) {
-    try {
-      const { payload } = await jwtVerify(session.accessToken, getKey(), {
-        algorithms: ["HS256"],
-      })
-
-      const user: User = {
-        id: payload.sub ?? (payload.email as string),
-        name: payload.name as string,
-        email: payload.email as string,
-        role: payload.role as User["role"],
-      }
-
-      return NextResponse.json(user)
-    } catch {
+  // ── Demo mode: verify and decode the locally-minted identity token ─────────
+  if (IS_DEMO_MODE) {
+    const identity = await verifyIdentityToken(session.accessToken)
+    if (!identity) {
       return NextResponse.json({ message: "Invalid session." }, { status: 401 })
     }
+    const user: User = {
+      id: identity.sub,
+      name: identity.name,
+      email: identity.email,
+      role: identity.role as User["role"],
+    }
+    return NextResponse.json(user)
   }
 
   // ── Production mode: proxy to backend ─────────────────────────────────────
   try {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${session.accessToken}` },
       cache: "no-store",
     })
-
     if (!res.ok) {
       return NextResponse.json({ message: "Unauthenticated." }, { status: res.status })
     }
-
     return NextResponse.json(await res.json())
   } catch {
     return NextResponse.json({ message: "Backend unavailable." }, { status: 503 })

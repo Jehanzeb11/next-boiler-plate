@@ -14,7 +14,11 @@ export const queryKeys = {
     detail: (id: string) => ["users", "detail", id] as const,
   },
 
-  // Add more domains as the app grows:
-  // products: { all: ["products"] as const, ... },
-  // dashboard: { stats: ["dashboard", "stats"] as const, ... },
+  products: {
+    all: ["products"] as const,
+    list: () => ["products", "list"] as const,
+    detail: (id: number) => ["products", "detail", id] as const,
+    byCategory: (category: string) => ["products", "category", category] as const,
+    categories: ["products", "categories"] as const,
+  },
 } as const

@@ -8,7 +8,6 @@
 // Cleared by:       logout
 //
 // NOT persisted to localStorage — the server session is the authority.
-// On a hard refresh, the layout re-fetches /auth/me from the server.
 // ---------------------------------------------------------------------------
 import { create } from "zustand"
 import { devtools } from "zustand/middleware"
@@ -27,7 +26,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
   devtools(
     (set) => ({
       user: null,
-
       setUser: (user) => set({ user }, false, "auth/setUser"),
       clearUser: () => set({ user: null }, false, "auth/clearUser"),
     }),

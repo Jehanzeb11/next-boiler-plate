@@ -1,21 +1,20 @@
 // ---------------------------------------------------------------------------
 // POST /api/auth/logout
 //
-// Clears the session cookie.  Optionally notifies the backend to
+// Clears the session cookie. Optionally notifies the backend to
 // invalidate the token server-side (if your backend supports it).
 // ---------------------------------------------------------------------------
 import { NextResponse } from "next/server"
-import { deleteSession, getSession } from "@/lib/session"
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? ""
+import { deleteSession, getSession } from "@/server/session"
+import { API_BASE_URL } from "@/constants"
 
 export async function POST() {
   const session = await getSession()
 
   // Best-effort: tell the backend to revoke the token
-  if (session?.accessToken) {
+  if (session?.accessToken && API_BASE_URL) {
     try {
-      await fetch(`${API_BASE}/auth/logout`, {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -23,11 +22,10 @@ export async function POST() {
         },
       })
     } catch {
-      // Ignore — we always clear the local cookie regardless
+      // Ignore — always clear the local cookie regardless
     }
   }
 
   await deleteSession()
-
   return NextResponse.json({ ok: true })
 }

@@ -1,20 +1,13 @@
 // ---------------------------------------------------------------------------
-// API Client
-//
-// A thin wrapper around fetch that:
-//   • Prefixes every request with NEXT_PUBLIC_API_BASE_URL
-//   • Attaches the Authorization header from the session cookie (server-side)
-//     or from the /api/auth/token internal route (client-side)
-//   • Normalises errors into a typed ApiError
-//   • Supports query params, typed request/response bodies
+// API Client — server-only + browser dual-mode
 //
 // Usage:
-//   Server Components / Server Actions:
-//     import { apiServer } from "@/lib/api-client"
+//   Server Components / Server Actions / Route Handlers:
+//     import { apiServer } from "@/server/api-client"
 //     const data = await apiServer.get<Product[]>("/products")
 //
 //   Client Components (via TanStack Query):
-//     import { apiClient } from "@/lib/api-client"
+//     import { apiClient } from "@/server/api-client"
 //     const data = await apiClient.get<Product[]>("/products")
 // ---------------------------------------------------------------------------
 
@@ -58,7 +51,6 @@ async function request<TResponse, TBody = unknown>(
 ): Promise<TResponse> {
   const { params, body, headers: extraHeaders, next, token } = options
 
-  // Build full URL
   const url = new URL(`${API_BASE}${path}`)
   if (params) {
     Object.entries(params).forEach(([k, v]) => {
@@ -93,20 +85,16 @@ async function request<TResponse, TBody = unknown>(
     throw new ApiRequestError(res.status, res.statusText, errorBody)
   }
 
-  // 204 No Content
   if (res.status === 204) return undefined as TResponse
-
   return res.json() as Promise<TResponse>
 }
 
 // ─── Server-side client (reads session cookie) ───────────────────────────────
-// Import this only in Server Components, Server Actions, and Route Handlers.
-// It automatically reads the httpOnly session cookie and forwards the token.
+// Import only in Server Components, Server Actions, and Route Handlers.
 
 function makeServerClient() {
   async function getToken(): Promise<string | undefined> {
-    // Lazy import — this module is server-only and must not be bundled client-side
-    const { getSession } = await import("@/lib/session")
+    const { getSession } = await import("@/server/session")
     const session = await getSession()
     return session?.accessToken
   }
@@ -131,18 +119,46 @@ function makeServerClient() {
 
 export const apiServer = makeServerClient()
 
-// ─── Browser client (calls /api/auth/token to retrieve token) ────────────────
-// Import this in Client Components for use with TanStack Query.
+// ─── Browser client ───────────────────────────────────────────────────────────
+// Fetches the token once, caches it in memory with a 4-minute TTL,
+// then reuses it for subsequent requests. This avoids a /api/auth/token
+// round-trip on every single query.
+
+interface TokenCache {
+  value: string
+  expiresAt: number
+}
+
+let _tokenCache: TokenCache | null = null
+const TOKEN_TTL_MS = 4 * 60 * 1000 // 4 minutes (session is 7 days, so well within bounds)
 
 async function getBrowserToken(): Promise<string | undefined> {
+  const now = Date.now()
+
+  if (_tokenCache && _tokenCache.expiresAt > now) {
+    return _tokenCache.value
+  }
+
   try {
     const res = await fetch("/api/auth/token", { credentials: "include" })
-    if (!res.ok) return undefined
+    if (!res.ok) {
+      _tokenCache = null
+      return undefined
+    }
     const json = (await res.json()) as { accessToken?: string }
-    return json.accessToken
+    if (!json.accessToken) return undefined
+
+    _tokenCache = { value: json.accessToken, expiresAt: now + TOKEN_TTL_MS }
+    return _tokenCache.value
   } catch {
+    _tokenCache = null
     return undefined
   }
+}
+
+/** Call this after logout to immediately invalidate the cached token. */
+export function invalidateBrowserTokenCache(): void {
+  _tokenCache = null
 }
 
 function makeBrowserClient() {

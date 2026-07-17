@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 interface SkeletonProps {
   className?: string
@@ -6,7 +6,6 @@ interface SkeletonProps {
 
 /**
  * Generic skeleton block — use as Suspense fallbacks to avoid layout shift.
- * Match the height/width of the real content to keep CLS near zero.
  */
 export function Skeleton({ className }: SkeletonProps) {
   return (

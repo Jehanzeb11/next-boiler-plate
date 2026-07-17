@@ -3,9 +3,8 @@
 // LoginForm
 //
 // Flow: RHF validates client-side → onValid builds FormData → Server Action
-// The Server Action runs on the server (no network request from the browser),
-// checks credentials, sets the httpOnly cookie, and redirects to "/".
-// Server-returned errors are mapped back onto RHF fields via useEffect.
+// The Server Action runs on the server, checks credentials, sets the httpOnly
+// cookie, and redirects. Server errors are mapped back onto RHF fields.
 // ---------------------------------------------------------------------------
 import { useActionState, useEffect, useTransition } from "react"
 import { useForm } from "react-hook-form"
@@ -14,9 +13,9 @@ import { useSearchParams } from "next/navigation"
 import { Eye, EyeOff, Loader2, LogIn } from "lucide-react"
 import { useState } from "react"
 
-import { login, type LoginResult } from "@/actions/auth"
-import { LoginSchema, type LoginInput } from "@/lib/validations/auth"
-import { cn } from "@/lib/utils"
+import { login, type LoginResult } from "@/features/auth/actions"
+import { LoginSchema, type LoginInput } from "@/features/auth/validations"
+import { cn } from "@/utils/cn"
 
 // ─── Field wrapper ────────────────────────────────────────────────────────────
 
@@ -66,7 +65,6 @@ export function LoginForm() {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  // RHF owns client-side state and runs the Zod resolver before submission
   const {
     register,
     handleSubmit,
@@ -77,32 +75,23 @@ export function LoginForm() {
     defaultValues: { email: "", password: "" },
   })
 
-  // useActionState wires the Server Action return value back to the client
   const [result, dispatch] = useActionState<LoginResult | undefined, FormData>(
     login,
     undefined
   )
 
-  // useTransition owns isPending — dispatch must be called inside startTransition
-  // when invoked programmatically rather than via a native form action= prop
   const [isPending, startTransition] = useTransition()
 
-  // Map server-returned errors onto RHF fields after each action run
   useEffect(() => {
     if (!result || result.status !== "error") return
-
-    if (result.fieldErrors?.email) {
+    if (result.fieldErrors?.email)
       setError("email", { type: "server", message: result.fieldErrors.email })
-    }
-    if (result.fieldErrors?.password) {
+    if (result.fieldErrors?.password)
       setError("password", { type: "server", message: result.fieldErrors.password })
-    }
-    if (result.message && !result.fieldErrors?.email && !result.fieldErrors?.password) {
+    if (result.message && !result.fieldErrors?.email && !result.fieldErrors?.password)
       setError("root.serverError", { type: "server", message: result.message })
-    }
   }, [result, setError])
 
-  // Called only after RHF client validation passes
   function onValid(data: LoginInput) {
     const fd = new FormData()
     fd.set("email", data.email)
@@ -115,8 +104,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onValid)} className="space-y-5" noValidate>
-
-      {/* Top-level error (e.g. wrong credentials) */}
+      {/* Top-level error */}
       {errors.root?.serverError?.message && (
         <div
           role="alert"
@@ -204,9 +192,9 @@ export function LoginForm() {
 
       {/* Demo hint */}
       <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
-        Demo: <span className="font-mono">admin@example.com</span> / <span className="font-mono">Admin@1234</span>
+        Demo: <span className="font-mono">admin@example.com</span> /{" "}
+        <span className="font-mono">Admin@1234</span>
       </p>
-
     </form>
   )
 }

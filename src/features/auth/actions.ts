@@ -1,6 +1,6 @@
 "use server"
 // ---------------------------------------------------------------------------
-// Auth Server Actions — no API routes, no fetch calls
+// Auth Server Actions
 //
 // login()   validates credentials server-side, creates the session cookie,
 //           and redirects. RHF on the client maps the returned errors onto
@@ -9,9 +9,9 @@
 // logout()  clears the session cookie and redirects to /login.
 // ---------------------------------------------------------------------------
 import { redirect } from "next/navigation"
-import { createSession, deleteSession } from "@/lib/session"
-import { LoginSchema } from "@/lib/validations/auth"
-import { findDemoAccount } from "@/lib/demo-accounts"
+import { createSession, deleteSession, mintIdentityToken } from "@/server/session"
+import { LoginSchema } from "@/features/auth/validations"
+import { findDemoAccount } from "@/server/demo-accounts"
 
 // ─── Result type ─────────────────────────────────────────────────────────────
 
@@ -48,22 +48,25 @@ export async function login(
 
   const { email, password } = parsed.data
 
-  // 2. Check demo credentials (replace with a real DB/API call later)
+  // 2. Check demo credentials (replace with a real backend call when ready)
   const account = findDemoAccount(email, password)
 
   if (!account) {
     return { status: "error", message: "Invalid email or password." }
   }
 
-  // 3. Seal a demo token into the httpOnly session cookie
+  // 3. Mint a signed JWT — verifiable with getEncodedKey() + jwtVerify.
   //    In production: call your backend, get a real accessToken, pass it here.
-  const demoToken = Buffer.from(
-    JSON.stringify({ userId: account.user.id, email: account.user.email, role: account.user.role })
-  ).toString("base64url")
+  const accessToken = await mintIdentityToken({
+    sub: account.user.id,
+    email: account.user.email,
+    name: account.user.name,
+    role: account.user.role,
+    demo: true,
+  })
 
-  await createSession(demoToken)
+  await createSession(accessToken)
 
-  // redirect() throws internally — redirect happens after return
   redirect("/")
 }
 

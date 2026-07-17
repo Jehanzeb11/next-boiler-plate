@@ -1,21 +1,19 @@
-import { getSession } from "@/lib/session"
-import { LogoutButton } from "@/components/auth/logout-button"
+import { getSession, verifyIdentityToken } from "@/server/session"
+import { LogoutButton } from "@/features/auth/components/logout-button"
+import { APP_NAME, IS_DEMO_MODE } from "@/constants"
 import type { User } from "@/types"
 
 export async function Header() {
   const session = await getSession()
   if (!session) return null
 
-  // Decode the demo token (base64url-encoded JSON) to get user info.
-  // In production this would be a JWT verified with your backend's public key,
-  // or a separate /auth/me call — swap this function out when the backend is ready.
-  const user = decodeSessionUser(session.accessToken)
+  const user = await resolveUser(session.accessToken)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <span className="text-sm font-semibold text-zinc-900 dark:text-white">
-          LI Boomers Panel
+          {APP_NAME}
         </span>
 
         <div className="flex items-center gap-3">
@@ -36,11 +34,27 @@ export async function Header() {
   )
 }
 
-function decodeSessionUser(token: string): Pick<User, "email" | "name" | "role"> | null {
-  try {
-    const json = Buffer.from(token, "base64url").toString("utf8")
-    return JSON.parse(json) as Pick<User, "email" | "name" | "role">
-  } catch {
-    return null
+/**
+ * Resolve a display-safe user identity from the access token.
+ *
+ * Demo mode: verifies the signed JWT locally — never trusts unverified bytes.
+ * Production mode: calls /api/auth/me on the backend (swap the fetch below).
+ */
+async function resolveUser(
+  accessToken: string
+): Promise<Pick<User, "email" | "name" | "role"> | null> {
+  if (IS_DEMO_MODE) {
+    const identity = await verifyIdentityToken(accessToken)
+    if (!identity) return null
+    return {
+      email: identity.email,
+      name: identity.name,
+      role: identity.role as User["role"],
+    }
   }
+
+  // Production: verify the JWT with the backend's public key OR call /auth/me.
+  // Swap this with your preferred strategy when you have a real backend.
+  // Example: return apiServer.get<Pick<User, "email" | "name" | "role">>("/auth/me")
+  return null
 }
