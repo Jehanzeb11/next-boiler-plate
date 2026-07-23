@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/page-header"
 import { UserTable } from "@/features/users/components/user-table"
 import { InviteUserDialog } from "@/features/users/components/invite-user-dialog"
 import { Button } from "@/components/ui/button"
+import { InviteUserGate } from "@/features/users/components/invite-user-gate"
 import { APP_NAME } from "@/constants"
 
 export const metadata: Metadata = {
@@ -20,12 +21,14 @@ export default function UsersPage() {
         description="Review team member accounts, roles, permission scopes, and status."
         badge="Access Control"
       >
-        <InviteUserDialog>
-          <Button size="sm" className="gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-md shadow-primary/20">
-            <UserPlus className="h-3.5 w-3.5" />
-            Invite User
-          </Button>
-        </InviteUserDialog>
+        <InviteUserGate>
+          <InviteUserDialog>
+            <Button size="sm" className="gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-md shadow-primary/20">
+              <UserPlus className="h-3.5 w-3.5" />
+              Invite User
+            </Button>
+          </InviteUserDialog>
+        </InviteUserGate>
       </PageHeader>
 
       <UserTable />

@@ -40,7 +40,7 @@ export default function LoginPage() {
         {/* Background decoration */}
         <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-linear-to-br from-purple-500/20 to-pink-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-indigo-500/15 blur-2xl pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-purple-600/5 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-125 w-125 rounded-full bg-purple-600/5 blur-3xl pointer-events-none" />
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-3">
@@ -121,7 +121,7 @@ export default function LoginPage() {
             </code>{" "}
             /{" "}
             <code className="font-mono bg-muted px-1.5 py-0.5 rounded text-foreground">
-              password
+              Admin@1234
             </code>
           </p>
         </div>

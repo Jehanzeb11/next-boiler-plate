@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Providers } from "@/components/providers"
-import { DashboardLayoutWrapper } from "@/components/layout/dashboard-layout-wrapper"
 import { APP_NAME, APP_DESCRIPTION } from "@/constants"
 
 const geistSans = Geist({
@@ -34,9 +33,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <DashboardLayoutWrapper>
-            {children}
-          </DashboardLayoutWrapper>
+          {children}
         </Providers>
       </body>
     </html>

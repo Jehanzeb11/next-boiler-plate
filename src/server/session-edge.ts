@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------------
-// session.edge.ts — Edge-runtime-safe session utilities
+// session-edge.ts — Edge-runtime-safe session utilities
 //
 // This module contains ONLY the crypto operations that middleware needs.
 // It has NO "server-only" import and NO Node.js-only APIs (no `cookies()`).
 //
-// Rule: middleware.ts must import from here, NOT from server/session.ts.
+// Rule: proxy.ts must import from here, NOT from server/session.ts.
 //       All other server code should continue using server/session.ts.
 // ---------------------------------------------------------------------------
 import { SignJWT, jwtVerify } from "jose"
@@ -50,7 +50,7 @@ export async function decryptSession(token: string): Promise<SessionPayload | nu
 
 /**
  * Slide the cookie expiry window.
- * Called by middleware on every authenticated request.
+ * Called by proxy on every authenticated request.
  * Returns null if the token is invalid or expired.
  */
 export async function refreshSession(raw: string): Promise<string | null> {

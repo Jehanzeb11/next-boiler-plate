@@ -6,9 +6,6 @@ import {
   Bell,
   ChevronRight,
   CheckCheck,
-  Package,
-  ShieldAlert,
-  UserPlus,
   Clock,
 } from "lucide-react"
 
@@ -28,36 +25,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { ThemeToggle } from "@/components/common/theme-toggle"
 import { useAuthStore } from "@/features/auth/store"
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user"
-
-const sampleNotifications = [
-  {
-    id: "1",
-    title: "New Inventory Restock",
-    desc: "20 units of Wireless Earbuds added.",
-    time: "5m ago",
-    icon: Package,
-    unread: true,
-    color: "text-purple-500 bg-purple-100 dark:bg-purple-950/60",
-  },
-  {
-    id: "2",
-    title: "User Role Elevated",
-    desc: "Sarah Chen assigned Manager role.",
-    time: "1h ago",
-    icon: UserPlus,
-    unread: true,
-    color: "text-indigo-500 bg-indigo-100 dark:bg-indigo-950/60",
-  },
-  {
-    id: "3",
-    title: "Security Telemetry Alert",
-    desc: "Successful admin session login.",
-    time: "3h ago",
-    icon: ShieldAlert,
-    unread: false,
-    color: "text-emerald-500 bg-emerald-100 dark:bg-emerald-950/60",
-  },
-]
+import { getNotifications } from "@/mocks/notifications"
 
 // Derives initials from a display name
 function getInitials(name: string): string {
@@ -80,7 +48,7 @@ const PAGE_TITLES: Record<string, string> = {
 
 export function AppHeader() {
   const pathname = usePathname()
-  const [notifications, setNotifications] = React.useState(sampleNotifications)
+  const [notifications, setNotifications] = React.useState(() => getNotifications())
   const unreadCount = notifications.filter((n) => n.unread).length
 
   // Sync user from /api/auth/me into Zustand on mount

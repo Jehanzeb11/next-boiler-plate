@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Plus, CalendarIcon, Check, ImageIcon, Sparkles, AlertCircle } from "lucide-react"
@@ -30,6 +30,14 @@ import {
   AttachmentTitle,
   AttachmentDescription,
 } from "@/components/ui/attachment"
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxEmpty,
+} from "@/components/ui/combobox"
 
 // ─── Zod Form Schema ─────────────────────────────────────────────────────────
 
@@ -65,6 +73,7 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<AddProductInput>({
     resolver: zodResolver(addProductSchema),
@@ -167,15 +176,45 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
               <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 Category *
               </label>
-              <select
-                {...register("category")}
-                className="w-full h-9 px-3 text-xs rounded-xl border border-border bg-muted/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-              >
-                <option value="electronics">Electronics</option>
-                <option value="jewelery">Jewelery</option>
-                <option value="men's clothing">Men&apos;s Clothing</option>
-                <option value="women's clothing">Women&apos;s Clothing</option>
-              </select>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                  <Combobox
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    inputValue={field.value}
+                    onInputChange={(val) => {
+                      // allow freeform typing to filter; commit on item select
+                      field.onChange(val)
+                    }}
+                  >
+                    <ComboboxInput
+                      placeholder="Search category…"
+                      className={`h-9 text-xs rounded-xl ${
+                        errors.category
+                          ? "border-red-500"
+                          : "border-zinc-200 dark:border-zinc-800"
+                      }`}
+                      showClear
+                    />
+                    <ComboboxContent>
+                      <ComboboxList>
+                        <ComboboxItem value="electronics">Electronics</ComboboxItem>
+                        <ComboboxItem value="jewelery">Jewelery</ComboboxItem>
+                        <ComboboxItem value="men's clothing">Men&apos;s Clothing</ComboboxItem>
+                        <ComboboxItem value="women's clothing">Women&apos;s Clothing</ComboboxItem>
+                      </ComboboxList>
+                      <ComboboxEmpty>No category found.</ComboboxEmpty>
+                    </ComboboxContent>
+                  </Combobox>
+                )}
+              />
+              {errors.category && (
+                <p className="text-[11px] text-red-500 flex items-center gap-1 mt-1 font-medium">
+                  <AlertCircle className="h-3 w-3" /> {errors.category.message}
+                </p>
+              )}
             </div>
           </div>
 

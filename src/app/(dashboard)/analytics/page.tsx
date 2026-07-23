@@ -20,27 +20,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
-
-const weeklyData = [
-  { day: "Mon", sales: 4200, visitors: 1200 },
-  { day: "Tue", sales: 5800, visitors: 1600 },
-  { day: "Wed", sales: 7100, visitors: 2100 },
-  { day: "Thu", sales: 6400, visitors: 1850 },
-  { day: "Fri", sales: 9200, visitors: 2800 },
-  { day: "Sat", sales: 11400, visitors: 3400 },
-  { day: "Sun", sales: 8900, visitors: 2600 },
-]
+import { useAnalytics } from "@/features/analytics/hooks/use-analytics"
 
 export default function AnalyticsPage() {
   const [isMounted, setIsMounted] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(new Date())
   const [popoverOpen, setPopoverOpen] = React.useState(false)
 
+  const { data, isLoading } = useAnalytics()
+
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
   }, [])
+
+  const weeklyData = data?.weekly ?? []
+  const kpi = data?.kpi
 
   const handleDownload = () => {
     toast.success("Telemetry report generated!", {
@@ -53,7 +49,7 @@ export default function AnalyticsPage() {
       <PageHeader
         title="Analytics & Insights"
         description="Detailed breakdown of sales velocity, visitor traffic, and performance telemetry."
-        badge="Real-Time Telemetry"
+        badge="Analytics Overview"
       >
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger
@@ -96,7 +92,13 @@ export default function AnalyticsPage() {
               <Zap className="h-4 w-4 text-primary" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-foreground">$142.50</span>
+              {isLoading ? (
+                <Skeleton className="h-8 w-24" />
+              ) : (
+                <span className="text-2xl font-extrabold text-foreground">
+                  ${kpi?.averageOrderValue.toFixed(2)}
+                </span>
+              )}
               <span className="text-xs font-semibold text-emerald-600">+5.4%</span>
             </div>
             <p className="mt-1 text-[11px] text-muted-foreground">Target $135.00 reached</p>
@@ -110,7 +112,13 @@ export default function AnalyticsPage() {
               <Target className="h-4 w-4 text-indigo-500" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-foreground">68.4%</span>
+              {isLoading ? (
+                <Skeleton className="h-8 w-20" />
+              ) : (
+                <span className="text-2xl font-extrabold text-foreground">
+                  {kpi?.customerRetention}%
+                </span>
+              )}
               <span className="text-xs font-semibold text-emerald-600">+3.1%</span>
             </div>
             <p className="mt-1 text-[11px] text-muted-foreground">High repeat customer rate</p>
@@ -124,7 +132,13 @@ export default function AnalyticsPage() {
               <RefreshCw className="h-4 w-4 text-pink-500" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-foreground">82.1%</span>
+              {isLoading ? (
+                <Skeleton className="h-8 w-20" />
+              ) : (
+                <span className="text-2xl font-extrabold text-foreground">
+                  {kpi?.cartCheckoutRate}%
+                </span>
+              )}
               <span className="text-xs font-semibold text-emerald-600">+1.8%</span>
             </div>
             <p className="mt-1 text-[11px] text-muted-foreground">Streamlined checkout UX</p>
@@ -141,27 +155,23 @@ export default function AnalyticsPage() {
             <CardDescription className="text-xs text-muted-foreground">Daily revenue totals for the active week</CardDescription>
           </CardHeader>
           <CardContent>
-            {isMounted ? (
-              <div className="h-[280px] w-full">
+            {isMounted && !isLoading ? (
+              <div className="h-70 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={weeklyData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(161, 161, 170, 0.2)" />
                     <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(24, 24, 27, 0.9)",
-                        borderRadius: "12px",
-                        color: "#fff",
-                      }}
-                  formatter={(val) => [`$${Number(val ?? 0).toLocaleString()}`, "Sales"] as [string, string]}
+                      contentStyle={{ backgroundColor: "rgba(24, 24, 27, 0.9)", borderRadius: "12px", color: "#fff" }}
+                      formatter={(val) => [`$${Number(val ?? 0).toLocaleString()}`, "Sales"] as [string, string]}
                     />
                     <Bar dataKey="sales" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-[280px] w-full rounded-xl bg-muted animate-pulse" />
+              <div className="h-70 w-full rounded-xl bg-muted animate-pulse" />
             )}
           </CardContent>
         </Card>
@@ -173,27 +183,23 @@ export default function AnalyticsPage() {
             <CardDescription className="text-xs text-muted-foreground">Unique store sessions per day</CardDescription>
           </CardHeader>
           <CardContent>
-            {isMounted ? (
-              <div className="h-[280px] w-full">
+            {isMounted && !isLoading ? (
+              <div className="h-70 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weeklyData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(161, 161, 170, 0.2)" />
                     <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(24, 24, 27, 0.9)",
-                        borderRadius: "12px",
-                        color: "#fff",
-                      }}
-                  formatter={(val) => [Number(val ?? 0).toLocaleString(), "Visitors"] as [string, string]}
+                      contentStyle={{ backgroundColor: "rgba(24, 24, 27, 0.9)", borderRadius: "12px", color: "#fff" }}
+                      formatter={(val) => [Number(val ?? 0).toLocaleString(), "Visitors"] as [string, string]}
                     />
                     <Line type="monotone" dataKey="visitors" stroke="#ec4899" strokeWidth={3} dot={{ r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-[280px] w-full rounded-xl bg-muted animate-pulse" />
+              <div className="h-70 w-full rounded-xl bg-muted animate-pulse" />
             )}
           </CardContent>
         </Card>

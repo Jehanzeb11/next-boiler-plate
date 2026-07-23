@@ -52,7 +52,8 @@ const kpiCards = [
     iconBg:   "bg-pink-100 dark:bg-pink-950/70 text-pink-600 dark:text-pink-400",
     badgeBg:  "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/50 border-purple-200 dark:border-purple-800/40",
     shadow:   "hover:shadow-pink-500/5",
-  },  {
+  },
+  {
     label:    "Conversion Rate",
     value:    "3.42%",
     change:   "+0.5%",

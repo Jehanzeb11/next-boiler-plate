@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Session — server-only (Node.js runtime)
 //
-// Uses the crypto primitives from session.edge.ts and adds the Node.js-only
+// Uses the crypto primitives from session-edge.ts and adds the Node.js-only
 // operations: reading/writing cookies via next/headers.
 //
 // proxy.ts (Next.js 16) also imports from this file directly since the
@@ -16,7 +16,7 @@ import {
   encryptSession,
   decryptSession,
   type SessionPayload,
-} from "@/server/session.edge"
+} from "@/server/session-edge"
 
 // Re-export SessionPayload so callers only need one import.
 export type { SessionPayload }
@@ -112,4 +112,4 @@ export async function deleteSession(): Promise<void> {
 }
 
 /** Slide the cookie expiry window — convenience wrapper for Node.js contexts. */
-export { refreshSession } from "@/server/session.edge"
+export { refreshSession } from "@/server/session-edge"

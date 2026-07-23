@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { UserPlus, CalendarIcon, Check, Shield, AlertCircle } from "lucide-react"
@@ -23,6 +23,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { Separator } from "@/components/ui/separator"
 import { Spinner } from "@/components/ui/spinner"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // ─── Zod Form Schema ─────────────────────────────────────────────────────────
 
@@ -54,6 +61,7 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<InviteUserInput>({
     resolver: zodResolver(inviteUserSchema),
@@ -66,7 +74,6 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
 
   const onSubmit = (data: InviteUserInput) => {
     setLoading(true)
-
     setTimeout(() => {
       setLoading(false)
       setOpen(false)
@@ -150,20 +157,28 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {/* Access Role */}
+            {/* Access Role — shadcn Select */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 Access Role *
               </label>
-              <select
-                {...register("role")}
-                className="w-full h-9 px-3 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all capitalize"
-              >
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="user">User</option>
-                <option value="viewer">Viewer</option>
-              </select>
+              <Controller
+                control={control}
+                name="role"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full h-9 rounded-xl text-xs">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             {/* Effective Date Datepicker */}
