@@ -25,7 +25,7 @@ export function DashboardLayoutWrapper({
       <AppSidebar />
       <SidebarInset className="flex min-h-screen flex-col bg-muted/30 transition-colors">
         <AppHeader />
-        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 animate-in">
+        <main className="flex-1 w-full mx-auto p-4 sm:p-6 lg:p-8 animate-in">
           {children}
         </main>
       </SidebarInset>
