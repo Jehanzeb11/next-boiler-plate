@@ -1,14 +1,12 @@
 // ---------------------------------------------------------------------------
-// API Client — server-only + browser dual-mode
+// API Client — Browser & Universal Client
 //
-// Usage:
-//   Server Components / Server Actions / Route Handlers:
-//     import { apiServer } from "@/server/api-client"
-//     const data = await apiServer.get<Product[]>("/products")
+// Usage in Client Components (via TanStack Query):
+//   import { apiClient } from "@/server/api-client"
+//   const data = await apiClient.get<Product[]>("/products")
 //
-//   Client Components (via TanStack Query):
-//     import { apiClient } from "@/server/api-client"
-//     const data = await apiClient.get<Product[]>("/products")
+// For Server Components / Server Actions, use:
+//   import { apiServer } from "@/server/api-server"
 // ---------------------------------------------------------------------------
 
 import type { ApiError } from "@/types"
@@ -44,7 +42,7 @@ export interface RequestOptions<TBody = unknown> {
 
 // ─── Core fetch ──────────────────────────────────────────────────────────────
 
-async function request<TResponse, TBody = unknown>(
+export async function request<TResponse, TBody = unknown>(
   method: HttpMethod,
   path: string,
   options: RequestOptions<TBody> & { token?: string } = {}
@@ -89,36 +87,6 @@ async function request<TResponse, TBody = unknown>(
   return res.json() as Promise<TResponse>
 }
 
-// ─── Server-side client (reads session cookie) ───────────────────────────────
-// Import only in Server Components, Server Actions, and Route Handlers.
-
-function makeServerClient() {
-  async function getToken(): Promise<string | undefined> {
-    const { getSession } = await import("@/server/session")
-    const session = await getSession()
-    return session?.accessToken
-  }
-
-  return {
-    get: async <T>(path: string, opts?: RequestOptions) =>
-      request<T>("GET", path, { ...opts, token: await getToken() }),
-
-    post: async <T, B = unknown>(path: string, body?: B, opts?: RequestOptions<B>) =>
-      request<T, B>("POST", path, { ...opts, body, token: await getToken() }),
-
-    put: async <T, B = unknown>(path: string, body?: B, opts?: RequestOptions<B>) =>
-      request<T, B>("PUT", path, { ...opts, body, token: await getToken() }),
-
-    patch: async <T, B = unknown>(path: string, body?: B, opts?: RequestOptions<B>) =>
-      request<T, B>("PATCH", path, { ...opts, body, token: await getToken() }),
-
-    delete: async <T>(path: string, opts?: RequestOptions) =>
-      request<T>("DELETE", path, { ...opts, token: await getToken() }),
-  }
-}
-
-export const apiServer = makeServerClient()
-
 // ─── Browser client ───────────────────────────────────────────────────────────
 // Fetches the token once, caches it in memory with a 4-minute TTL,
 // then reuses it for subsequent requests. This avoids a /api/auth/token
@@ -130,7 +98,7 @@ interface TokenCache {
 }
 
 let _tokenCache: TokenCache | null = null
-const TOKEN_TTL_MS = 4 * 60 * 1000 // 4 minutes (session is 7 days, so well within bounds)
+const TOKEN_TTL_MS = 4 * 60 * 1000 // 4 minutes
 
 async function getBrowserToken(): Promise<string | undefined> {
   const now = Date.now()

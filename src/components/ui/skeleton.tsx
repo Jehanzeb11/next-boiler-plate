@@ -1,17 +1,13 @@
-import { cn } from "@/utils/cn"
+import { cn } from "@/lib/utils"
 
-interface SkeletonProps {
-  className?: string
-}
-
-/**
- * Generic skeleton block — use as Suspense fallbacks to avoid layout shift.
- */
-export function Skeleton({ className }: SkeletonProps) {
+function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800", className)}
-      aria-hidden="true"
+      data-slot="skeleton"
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
     />
   )
 }
+
+export { Skeleton }

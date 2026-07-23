@@ -1,15 +1,13 @@
 "use client"
 
-// ---------------------------------------------------------------------------
-// Providers wrapper
-// All Client Component providers live here. Keeps layout.tsx clean.
-// ---------------------------------------------------------------------------
 import QueryProvider from "@/lib/query-client"
+import { Toaster } from "@/components/ui/sonner"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryProvider>
       {children}
+      <Toaster position="bottom-right" richColors />
     </QueryProvider>
   )
 }
