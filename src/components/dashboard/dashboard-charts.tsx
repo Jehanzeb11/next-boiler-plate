@@ -36,14 +36,15 @@ export function DashboardCharts() {
   const [isMounted, setIsMounted] = React.useState(false)
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
   }, [])
 
   if (!isMounted) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 h-[340px] rounded-3xl bg-zinc-100 dark:bg-zinc-900 animate-pulse" />
-        <div className="h-[340px] rounded-3xl bg-zinc-100 dark:bg-zinc-900 animate-pulse" />
+        <div className="lg:col-span-2 h-85 rounded-3xl bg-muted animate-pulse" />
+        <div className="h-85 rounded-3xl bg-muted animate-pulse" />
       </div>
     )
   }
@@ -51,15 +52,15 @@ export function DashboardCharts() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Revenue Area Chart */}
-      <Card className="lg:col-span-2 rounded-3xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md shadow-sm">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between border-b border-zinc-100 dark:border-zinc-800/60 mb-2">
+      <Card className="lg:col-span-2 rounded-3xl border-border/70 bg-card/80 backdrop-blur-md shadow-sm">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between border-b border-border/60 mb-2">
           <div>
-            <CardTitle className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-purple-600" />
+            <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-primary" />
               Revenue Growth Stream
             </CardTitle>
-            <CardDescription className="text-xs text-zinc-500">
-              Monthly gross revenue progression over the current 6-month cycle
+            <CardDescription className="text-xs text-muted-foreground">
+              Monthly gross revenue over the current 6-month cycle
             </CardDescription>
           </div>
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/40">
@@ -67,7 +68,7 @@ export function DashboardCharts() {
           </span>
         </CardHeader>
         <CardContent className="pt-4">
-          <div className="h-[270px] w-full">
+          <div className="h-67.5 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -87,7 +88,7 @@ export function DashboardCharts() {
                     color: "#fff",
                     boxShadow: "0 10px 25px -5px rgba(0,0,0,0.3)",
                   }}
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, "Revenue"]}
+                formatter={(value) => [`$${Number(value ?? 0).toLocaleString()}`, "Revenue"] as [string, string]}
                 />
                 <Area type="monotone" dataKey="revenue" stroke="#a855f7" strokeWidth={3} fillOpacity={1} fill="url(#revenueGrad)" />
               </AreaChart>
@@ -97,18 +98,18 @@ export function DashboardCharts() {
       </Card>
 
       {/* Category Share Pie Chart */}
-      <Card className="rounded-3xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md shadow-sm">
-        <CardHeader className="pb-2 border-b border-zinc-100 dark:border-zinc-800/60 mb-2">
-          <CardTitle className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <PieIcon className="h-4 w-4 text-purple-600" />
+      <Card className="rounded-3xl border-border/70 bg-card/80 backdrop-blur-md shadow-sm">
+        <CardHeader className="pb-2 border-b border-border/60 mb-2">
+          <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+            <PieIcon className="h-4 w-4 text-primary" />
             Category Share
           </CardTitle>
-          <CardDescription className="text-xs text-zinc-500">
+          <CardDescription className="text-xs text-muted-foreground">
             Sales volume breakdown by product segment
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-2">
-          <div className="h-[190px] w-full">
+          <div className="h-47.5 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -130,17 +131,17 @@ export function DashboardCharts() {
                     borderRadius: "16px",
                     color: "#fff",
                   }}
-                  formatter={(val: number) => [`${val}%`, "Share"]}
+                formatter={(val) => [`${val ?? 0}%`, "Share"] as [string, string]}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
             {categoryData.map((cat) => (
-              <div key={cat.name} className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800/40 p-2 rounded-xl border border-zinc-100 dark:border-zinc-800/50">
+              <div key={cat.name} className="flex items-center gap-2 bg-muted/50 p-2 rounded-xl border border-border/50">
                 <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-                <span className="text-zinc-600 dark:text-zinc-400 truncate">{cat.name}</span>
-                <span className="font-bold text-zinc-900 dark:text-white ml-auto">{cat.value}%</span>
+                <span className="text-muted-foreground truncate">{cat.name}</span>
+                <span className="font-bold text-foreground ml-auto">{cat.value}%</span>
               </div>
             ))}
           </div>

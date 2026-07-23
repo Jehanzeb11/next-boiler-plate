@@ -7,7 +7,6 @@ import {
   Search,
   Trash2,
   Edit2,
-  Shield,
   UserCheck,
 } from "lucide-react"
 
@@ -102,48 +101,48 @@ export function UserTable() {
   return (
     <div className="space-y-4">
       {/* Search & Action Control Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-3xl border border-border/70 bg-card/80 backdrop-blur-md shadow-sm">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search team members by name or role..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-9 text-xs rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/40"
+            className="pl-9 h-9 text-xs rounded-2xl"
           />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-          <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-medium">
-            <UserCheck className="h-4 w-4 text-purple-600" />
-            Active Members: <span className="font-bold text-zinc-900 dark:text-white">{filteredUsers.length}</span>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <UserCheck className="h-4 w-4 text-primary" />
+            Active Members: <span className="font-bold text-foreground">{filteredUsers.length}</span>
           </div>
           <InviteUserDialog />
         </div>
       </div>
 
       {/* User Table Card */}
-      <div className="rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md shadow-sm overflow-hidden">
+      <div className="rounded-3xl border border-border/70 bg-card/80 backdrop-blur-md shadow-sm overflow-hidden">
         <Table>
-          <TableHeader className="bg-zinc-50/80 dark:bg-zinc-950/60 border-b border-zinc-200/80 dark:border-zinc-800/80">
+          <TableHeader className="bg-muted/50 border-b border-border/70">
             <TableRow>
-              <TableHead className="w-[320px] text-xs font-bold text-zinc-900 dark:text-zinc-100 py-3.5">User Details</TableHead>
-              <TableHead className="text-xs font-bold text-zinc-900 dark:text-zinc-100">Role</TableHead>
-              <TableHead className="text-xs font-bold text-zinc-900 dark:text-zinc-100">Status</TableHead>
-              <TableHead className="text-xs font-bold text-zinc-900 dark:text-zinc-100">Joined Date</TableHead>
-              <TableHead className="text-right text-xs font-bold text-zinc-900 dark:text-zinc-100 pr-6">Actions</TableHead>
+              <TableHead className="w-[320px] text-xs font-bold text-foreground py-3.5">User Details</TableHead>
+              <TableHead className="text-xs font-bold text-foreground">Role</TableHead>
+              <TableHead className="text-xs font-bold text-foreground">Status</TableHead>
+              <TableHead className="text-xs font-bold text-foreground">Joined Date</TableHead>
+              <TableHead className="text-right text-xs font-bold text-foreground pr-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-36 text-center text-xs text-zinc-500">
+                <TableCell colSpan={5} className="h-36 text-center text-xs text-muted-foreground">
                   Loading user directory...
                 </TableCell>
               </TableRow>
             ) : filteredUsers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-36 text-center text-xs text-zinc-500">
-                  No users matching "{searchTerm}"
+                <TableCell colSpan={5} className="h-36 text-center text-xs text-muted-foreground">
+                  No users matching &ldquo;{searchTerm}&rdquo;
                 </TableCell>
               </TableRow>
             ) : (
@@ -155,20 +154,20 @@ export function UserTable() {
                   .toUpperCase()
 
                 return (
-                  <TableRow key={user.id} className="hover:bg-purple-50/30 dark:hover:bg-purple-950/20 transition-colors">
+                  <TableRow key={user.id} className="hover:bg-primary/5 transition-colors">
                     <TableCell className="py-3">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 ring-2 ring-purple-500/20 shadow-xs">
-                          <AvatarFallback className="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white text-xs font-extrabold">
+                        <Avatar className="h-10 w-10 ring-2 ring-primary/20 shadow-xs">
+                          <AvatarFallback className="bg-linear-to-tr from-purple-600 to-indigo-600 text-white text-xs font-extrabold">
                             {initials}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className="text-xs font-bold text-zinc-900 dark:text-white">
+                          <span className="text-xs font-bold text-foreground">
                             {user.name}
                           </span>
-                          <span className="text-[11px] text-zinc-500 flex items-center gap-1 mt-0.5">
-                            <Mail className="h-3 w-3 text-zinc-400" />
+                          <span className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                            <Mail className="h-3 w-3" />
                             {user.email}
                           </span>
                         </div>
@@ -180,19 +179,19 @@ export function UserTable() {
                         <CheckCircle2 className="h-3 w-3" /> Active
                       </span>
                     </TableCell>
-                    <TableCell className="text-xs text-zinc-500 font-medium">
+                    <TableCell className="text-xs text-muted-foreground font-medium">
                       {user.createdAt ?? "2026-01-01"}
                     </TableCell>
                     <TableCell className="text-right pr-6">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl text-zinc-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/40">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10">
                           <Edit2 className="h-3.5 w-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDelete(user.name)}
-                          className="h-8 w-8 rounded-xl text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
+                          className="h-8 w-8 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

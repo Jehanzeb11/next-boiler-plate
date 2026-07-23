@@ -38,6 +38,7 @@ export default function AnalyticsPage() {
   const [popoverOpen, setPopoverOpen] = React.useState(false)
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
   }, [])
 
@@ -72,7 +73,6 @@ export default function AnalyticsPage() {
                 setPopoverOpen(false)
                 toast.info(`Filtered telemetry data for ${d ? format(d, "PP") : "selected date"}`)
               }}
-              initialFocus
             />
           </PopoverContent>
         </Popover>
@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
         <Button
           onClick={handleDownload}
           size="sm"
-          className="gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-md shadow-purple-500/20"
+          className="gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-md shadow-primary/20"
         >
           <Download className="h-3.5 w-3.5" />
           Download Report
@@ -89,45 +89,45 @@ export default function AnalyticsPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm p-5 shadow-sm">
+        <Card className="rounded-2xl border-border/70 bg-card/80 backdrop-blur-sm p-5 shadow-sm">
           <CardContent className="p-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-500">Average Order Value</span>
-              <Zap className="h-4 w-4 text-purple-500" />
+              <span className="text-xs font-medium text-muted-foreground">Average Order Value</span>
+              <Zap className="h-4 w-4 text-primary" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-zinc-900 dark:text-white">$142.50</span>
+              <span className="text-2xl font-extrabold text-foreground">$142.50</span>
               <span className="text-xs font-semibold text-emerald-600">+5.4%</span>
             </div>
-            <p className="mt-1 text-[11px] text-zinc-400">Target $135.00 reached</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Target $135.00 reached</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm p-5 shadow-sm">
+        <Card className="rounded-2xl border-border/70 bg-card/80 backdrop-blur-sm p-5 shadow-sm">
           <CardContent className="p-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-500">Customer Retention</span>
+              <span className="text-xs font-medium text-muted-foreground">Customer Retention</span>
               <Target className="h-4 w-4 text-indigo-500" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-zinc-900 dark:text-white">68.4%</span>
+              <span className="text-2xl font-extrabold text-foreground">68.4%</span>
               <span className="text-xs font-semibold text-emerald-600">+3.1%</span>
             </div>
-            <p className="mt-1 text-[11px] text-zinc-400">High repeat customer rate</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">High repeat customer rate</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm p-5 shadow-sm">
+        <Card className="rounded-2xl border-border/70 bg-card/80 backdrop-blur-sm p-5 shadow-sm">
           <CardContent className="p-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-500">Cart Checkout Rate</span>
+              <span className="text-xs font-medium text-muted-foreground">Cart Checkout Rate</span>
               <RefreshCw className="h-4 w-4 text-pink-500" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-zinc-900 dark:text-white">82.1%</span>
+              <span className="text-2xl font-extrabold text-foreground">82.1%</span>
               <span className="text-xs font-semibold text-emerald-600">+1.8%</span>
             </div>
-            <p className="mt-1 text-[11px] text-zinc-400">Streamlined checkout UX</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Streamlined checkout UX</p>
           </CardContent>
         </Card>
       </div>
@@ -135,10 +135,10 @@ export default function AnalyticsPage() {
       {/* Main Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Sales Bar Chart */}
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm">
+        <Card className="rounded-2xl border-border/70 bg-card/80 backdrop-blur-sm shadow-sm">
           <CardHeader>
             <CardTitle className="text-base font-bold">Weekly Sales ($)</CardTitle>
-            <CardDescription className="text-xs text-zinc-500">Daily revenue totals for the active week</CardDescription>
+            <CardDescription className="text-xs text-muted-foreground">Daily revenue totals for the active week</CardDescription>
           </CardHeader>
           <CardContent>
             {isMounted ? (
@@ -154,23 +154,23 @@ export default function AnalyticsPage() {
                         borderRadius: "12px",
                         color: "#fff",
                       }}
-                      formatter={(val: number) => [`$${val.toLocaleString()}`, "Sales"]}
+                  formatter={(val) => [`$${Number(val ?? 0).toLocaleString()}`, "Sales"] as [string, string]}
                     />
                     <Bar dataKey="sales" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-[280px] w-full rounded-xl bg-zinc-100 dark:bg-zinc-800/50 animate-pulse" />
+              <div className="h-[280px] w-full rounded-xl bg-muted animate-pulse" />
             )}
           </CardContent>
         </Card>
 
         {/* Visitor Traffic Line Chart */}
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm">
+        <Card className="rounded-2xl border-border/70 bg-card/80 backdrop-blur-sm shadow-sm">
           <CardHeader>
             <CardTitle className="text-base font-bold">Visitor Volume</CardTitle>
-            <CardDescription className="text-xs text-zinc-500">Unique store sessions per day</CardDescription>
+            <CardDescription className="text-xs text-muted-foreground">Unique store sessions per day</CardDescription>
           </CardHeader>
           <CardContent>
             {isMounted ? (
@@ -186,14 +186,14 @@ export default function AnalyticsPage() {
                         borderRadius: "12px",
                         color: "#fff",
                       }}
-                      formatter={(val: number) => [val.toLocaleString(), "Visitors"]}
+                  formatter={(val) => [Number(val ?? 0).toLocaleString(), "Visitors"] as [string, string]}
                     />
                     <Line type="monotone" dataKey="visitors" stroke="#ec4899" strokeWidth={3} dot={{ r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-[280px] w-full rounded-xl bg-zinc-100 dark:bg-zinc-800/50 animate-pulse" />
+              <div className="h-[280px] w-full rounded-xl bg-muted animate-pulse" />
             )}
           </CardContent>
         </Card>

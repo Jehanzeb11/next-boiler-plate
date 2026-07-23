@@ -23,7 +23,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { Separator } from "@/components/ui/separator"
 import { Spinner } from "@/components/ui/spinner"
-import { UserRole } from "@/types"
 
 // ─── Zod Form Schema ─────────────────────────────────────────────────────────
 
@@ -85,7 +84,7 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
           children ? (
             (children as React.ReactElement)
           ) : (
-            <Button size="sm" className="gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-semibold shadow-md shadow-purple-500/20 hover:opacity-95 transition-all">
+            <Button size="sm" className="gap-2 rounded-xl bg-linear-to-r from-purple-600 to-indigo-600 text-white text-xs font-semibold shadow-md shadow-purple-500/20 hover:opacity-95 transition-all">
               <UserPlus className="h-3.5 w-3.5" /> Invite User
             </Button>
           )
@@ -193,7 +192,6 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
                       setStartDate(d)
                       setPopoverOpen(false)
                     }}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -214,7 +212,7 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-xs font-semibold gap-2 shadow-md shadow-indigo-500/20"
+              className="rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-xs font-semibold gap-2 shadow-md shadow-indigo-500/20"
             >
               {loading ? <Spinner className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5" />}
               {loading ? "Sending..." : "Send Invitation"}

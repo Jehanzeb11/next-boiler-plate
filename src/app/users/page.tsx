@@ -21,7 +21,7 @@ export default function UsersPage() {
         badge="Access Control"
       >
         <InviteUserDialog>
-          <Button size="sm" className="gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-md shadow-purple-500/20">
+          <Button size="sm" className="gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-md shadow-primary/20">
             <UserPlus className="h-3.5 w-3.5" />
             Invite User
           </Button>

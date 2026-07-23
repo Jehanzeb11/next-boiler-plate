@@ -21,11 +21,11 @@ export function DashboardLayoutWrapper({
   }
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen>
       <AppSidebar />
-      <SidebarInset className="flex min-h-screen flex-col bg-zinc-50/50 dark:bg-zinc-950/50 transition-colors">
+      <SidebarInset className="flex min-h-screen flex-col bg-muted/30 transition-colors">
         <AppHeader />
-        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 animate-in fade-in duration-300">
+        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 animate-in">
           {children}
         </main>
       </SidebarInset>

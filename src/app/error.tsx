@@ -4,6 +4,8 @@
 // Next.js requires this to be a Client Component.
 // ---------------------------------------------------------------------------
 import { useEffect } from "react"
+import { RefreshCw, AlertTriangle } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 interface ErrorProps {
   error: Error & { digest?: string }
@@ -17,43 +19,34 @@ export default function GlobalError({ error, reset }: ErrorProps) {
   }, [error])
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4">
-      <div className="w-full max-w-md text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-100 dark:bg-red-950">
-          <svg
-            className="w-7 h-7 text-red-600 dark:text-red-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-              clipRule="evenodd"
-            />
-          </svg>
+    <main className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-md text-center space-y-6">
+        {/* Icon */}
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/20">
+          <AlertTriangle className="w-8 h-8 text-destructive" />
         </div>
 
-        <div>
-          <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">
+        <div className="space-y-2">
+          <h1 className="text-xl font-bold text-foreground">
             Something went wrong
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-muted-foreground">
             An unexpected error occurred. Our team has been notified.
           </p>
           {error.digest && (
-            <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono">
+            <p className="mt-2 text-xs text-muted-foreground/60 font-mono bg-muted inline-block px-2.5 py-1 rounded-lg">
               Error ID: {error.digest}
             </p>
           )}
         </div>
 
-        <button
+        <Button
           onClick={reset}
-          className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-2 text-sm font-semibold hover:bg-zinc-700 dark:hover:bg-zinc-100 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:ring-offset-2"
+          className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gap-2 font-semibold shadow-md shadow-primary/20"
         >
+          <RefreshCw className="h-4 w-4" />
           Try again
-        </button>
+        </Button>
       </div>
     </main>
   )

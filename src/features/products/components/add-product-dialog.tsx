@@ -38,9 +38,10 @@ const addProductSchema = z.object({
     .string()
     .min(3, "Product title must be at least 3 characters")
     .max(100, "Title is too long"),
-  price: z.coerce
-    .number({ invalid_type_error: "Price must be a valid number" })
-    .min(0.01, "Price must be greater than $0.00"),
+  price: z
+    .string()
+    .min(1, "Price is required")
+    .refine((v) => !isNaN(Number(v)) && Number(v) > 0, "Price must be a valid number greater than 0"),
   category: z.string().min(1, "Please select a category"),
   description: z
     .string()
@@ -82,7 +83,7 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
       setLoading(false)
       setOpen(false)
       toast.success(`Product "${data.title}" added to inventory!`, {
-        description: `Price: $${data.price.toFixed(2)} | Category: ${data.category} | Scheduled: ${releaseDate ? format(releaseDate, "PP") : "Immediate"}`,
+        description: `Price: $${parseFloat(data.price).toFixed(2)} | Category: ${data.category} | Scheduled: ${releaseDate ? format(releaseDate, "PP") : "Immediate"}`,
       })
       reset()
     }, 800)
@@ -95,7 +96,7 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
           children ? (
             (children as React.ReactElement)
           ) : (
-            <Button size="sm" className="gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:opacity-95 text-white text-xs font-semibold shadow-md shadow-purple-500/25 transition-all">
+            <Button size="sm" className="gap-2 rounded-xl bg-linear-to-r from-purple-600 via-indigo-600 to-purple-700 hover:opacity-95 text-white text-xs font-semibold shadow-md shadow-purple-500/25 transition-all">
               <Plus className="h-3.5 w-3.5" /> Add Product
             </Button>
           )
@@ -168,19 +169,19 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
               </label>
               <select
                 {...register("category")}
-                className="w-full h-9 px-3 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                className="w-full h-9 px-3 text-xs rounded-xl border border-border bg-muted/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               >
                 <option value="electronics">Electronics</option>
                 <option value="jewelery">Jewelery</option>
-                <option value="men's clothing">Men's Clothing</option>
-                <option value="women's clothing">Women's Clothing</option>
+                <option value="men's clothing">Men&apos;s Clothing</option>
+                <option value="women's clothing">Women&apos;s Clothing</option>
               </select>
             </div>
           </div>
 
           {/* Release Date Datepicker */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <label className="text-xs font-semibold text-foreground/80">
               Release Date (Datepicker)
             </label>
             <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -204,7 +205,6 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
                     setReleaseDate(d)
                     setPopoverOpen(false)
                   }}
-                  initialFocus
                 />
               </PopoverContent>
             </Popover>
@@ -264,7 +264,7 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white text-xs font-semibold gap-2 shadow-md shadow-purple-500/20"
+              className="rounded-xl bg-linear-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white text-xs font-semibold gap-2 shadow-md shadow-purple-500/20"
             >
               {loading ? <Spinner className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5" />}
               {loading ? "Saving..." : "Create Product"}
