@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images:{
-    remotePatterns:[{
-      hostname:"fakestoreapi.com"
-    }]
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fakestoreapi.com",
+        pathname: "/img/**",
+      },
+    ],
   },
   reactCompiler: true,
 };

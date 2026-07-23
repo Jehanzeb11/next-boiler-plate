@@ -11,16 +11,7 @@ export default function HomePage() {
           Products
         </h1>
         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-          Fetched server-side from{" "}
-          <a
-            href="https://fakestoreapi.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-zinc-700 dark:hover:text-zinc-200"
-          >
-            fakestoreapi.com
-          </a>
-          . Data cached and revalidated every 60 seconds.
+          Browse and manage the product catalog.
         </p>
       </div>
 

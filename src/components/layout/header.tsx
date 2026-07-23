@@ -1,12 +1,14 @@
-import { getSession, verifyIdentityToken } from "@/server/session"
+import { verifyIdentityToken } from "@/server/session"
 import { LogoutButton } from "@/features/auth/components/logout-button"
 import { APP_NAME, IS_DEMO_MODE } from "@/constants"
+import type { SessionPayload } from "@/server/session"
 import type { User } from "@/types"
 
-export async function Header() {
-  const session = await getSession()
-  if (!session) return null
+interface HeaderProps {
+  session: SessionPayload
+}
 
+export async function Header({ session }: HeaderProps) {
   const user = await resolveUser(session.accessToken)
 
   return (

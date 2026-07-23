@@ -19,12 +19,21 @@ import { refreshSession } from "@/server/session"
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+
   const isPublic = PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   )
 
   const rawToken = request.cookies.get(SESSION_COOKIE)?.value
-  const isAuthenticated = Boolean(rawToken)
+
+  // ── Validate the JWT — existence alone is not enough ─────────────────────
+  // refreshSession() calls decryptSession() → jwtVerify() internally.
+  // A tampered, expired, or missing token yields null.
+  let newToken: string | null = null
+  if (rawToken) {
+    newToken = await refreshSession(rawToken)
+  }
+  const isAuthenticated = newToken !== null
 
   // ── Authenticated → bounce away from /login ───────────────────────────────
   if (isAuthenticated && pathname === "/login") {
@@ -38,20 +47,17 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // ── Authenticated → slide the session cookie ──────────────────────────────
+  // ── Authenticated → slide the session cookie with the refreshed token ─────
   const response = NextResponse.next()
 
-  if (isAuthenticated && rawToken) {
-    const newToken = await refreshSession(rawToken)
-    if (newToken) {
-      response.cookies.set(SESSION_COOKIE, newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        expires: new Date(Date.now() + SESSION_DURATION_MS),
-      })
-    }
+  if (isAuthenticated && newToken) {
+    response.cookies.set(SESSION_COOKIE, newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      expires: new Date(Date.now() + SESSION_DURATION_MS),
+    })
   }
 
   return response

@@ -1,20 +1,19 @@
 // ---------------------------------------------------------------------------
 // Products — server-side data fetching service
 // Plain async functions called directly in Server Components.
-// Swap BASE_URL for your real backend when it's ready.
+// Swap PRODUCTS_BASE_URL (via PRODUCTS_API_BASE_URL env var) for your real backend.
 // ---------------------------------------------------------------------------
 import type { Product } from "@/types"
+import { PRODUCTS_BASE_URL } from "@/constants"
 
 export type { Product, ProductRating } from "@/types"
 
-const BASE_URL = "https://fakestoreapi.com"
-
 async function apiFetch<T>(path: string, revalidate = 60): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const res = await fetch(`${PRODUCTS_BASE_URL}${path}`, {
     next: { revalidate },
   })
   if (!res.ok) {
-    throw new Error(`Fetch failed: ${res.status} ${res.statusText} — ${BASE_URL}${path}`)
+    throw new Error(`Fetch failed: ${res.status} ${res.statusText} — ${PRODUCTS_BASE_URL}${path}`)
   }
   return res.json() as Promise<T>
 }

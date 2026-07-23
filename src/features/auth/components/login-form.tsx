@@ -190,11 +190,6 @@ export function LoginForm() {
         )}
       </button>
 
-      {/* Demo hint */}
-      <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
-        Demo: <span className="font-mono">admin@example.com</span> /{" "}
-        <span className="font-mono">Admin@1234</span>
-      </p>
     </form>
   )
 }

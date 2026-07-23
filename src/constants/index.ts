@@ -30,7 +30,12 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? ""
  */
 export const IS_DEMO_MODE = API_BASE_URL.trim() === ""
 
-// ─── App ──────────────────────────────────────────────────────────────────────
+/**
+ * Base URL for the external products API.
+ * Defaults to fakestoreapi.com for demo mode; override via env for production.
+ */
+export const PRODUCTS_BASE_URL =
+  process.env.PRODUCTS_API_BASE_URL ?? "https://fakestoreapi.com"
 
 export const APP_NAME = "LI Boomers Panel"
-export const APP_DESCRIPTION = "Admin panel"
+export const APP_DESCRIPTION = "Internal admin panel for managing products, users, and operations."
