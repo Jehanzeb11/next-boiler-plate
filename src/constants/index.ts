@@ -37,5 +37,5 @@ export const IS_DEMO_MODE = API_BASE_URL.trim() === ""
 export const PRODUCTS_BASE_URL =
   process.env.PRODUCTS_API_BASE_URL ?? "https://fakestoreapi.com"
 
-export const APP_NAME = "LI Boomers Panel"
-export const APP_DESCRIPTION = "Internal admin panel for managing products, users, and operations."
+export const APP_NAME = "Next Boiler Plate"
+export const APP_DESCRIPTION = "Modern admin panel starter for managing products, users, and operations."

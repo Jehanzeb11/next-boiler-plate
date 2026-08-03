@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 import { APP_NAME } from "@/constants"
 import { getProducts, getCategories } from "@/features/products/services"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: `Products — ${APP_NAME}`,
   description: "Browse and manage product inventory.",
-} satisfies import("next").Metadata
+}
 
 export default async function ProductsPage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()])

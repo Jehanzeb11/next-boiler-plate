@@ -25,15 +25,10 @@ import { toast } from "sonner"
 import { useAnalytics } from "@/features/analytics/hooks/use-analytics"
 
 export default function AnalyticsPage() {
-  const [isMounted, setIsMounted] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(new Date())
   const [popoverOpen, setPopoverOpen] = React.useState(false)
 
   const { data, isLoading } = useAnalytics()
-
-  React.useEffect(() => {
-    setIsMounted(true)
-  }, [])
 
   const weeklyData = data?.weekly ?? []
   const kpi = data?.kpi
@@ -155,7 +150,7 @@ export default function AnalyticsPage() {
             <CardDescription className="text-xs text-muted-foreground">Daily revenue totals for the active week</CardDescription>
           </CardHeader>
           <CardContent>
-            {isMounted && !isLoading ? (
+            {!isLoading ? (
               <div className="h-70 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={weeklyData}>
@@ -183,7 +178,7 @@ export default function AnalyticsPage() {
             <CardDescription className="text-xs text-muted-foreground">Unique store sessions per day</CardDescription>
           </CardHeader>
           <CardContent>
-            {isMounted && !isLoading ? (
+            {!isLoading ? (
               <div className="h-70 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weeklyData}>

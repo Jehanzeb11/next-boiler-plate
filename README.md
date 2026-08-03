@@ -1,6 +1,6 @@
-# LI Boomers Panel — Complete Reference & AI Integration Guide
+# Next Boiler Plate — Complete Reference & AI Integration Guide
 
-> **Purpose of this file:** A complete A-to-Z reference for the `li-boomers-panel` project.
+> **Purpose of this file:** A complete A-to-Z reference for the `next-boiler-plate` project.
 > Send it to an AI agent to recreate or integrate the dashboard into any existing Next.js project
 > without modifying the host project's existing code.
 
@@ -34,7 +34,7 @@
 
 ## 1. What this project is
 
-**LI Boomers Panel** (`li-boomers-panel`) is a production-oriented **Next.js 16 App Router** admin dashboard designed to sit beside an existing public website as the authenticated admin / operations area.
+**Next Boiler Plate** (`next-boiler-plate`) is a production-oriented **Next.js 16 App Router** admin dashboard starter designed to sit beside an existing public website as the authenticated admin / operations area.
 
 | Area | Route | Purpose |
 |------|-------|---------|
@@ -216,7 +216,7 @@ PRODUCTS_API_BASE_URL=
 ## 6. Project structure (annotated)
 
 ```
-li-boomers-panel/
+next-boiler-plate/
 ├── .env.local                    # Environment secrets (git-ignored)
 ├── components.json               # shadcn/ui configuration
 ├── eslint.config.mjs             # ESLint flat config (Next.js + TanStack Query)
@@ -642,7 +642,7 @@ Client-side code needs the access token to call the backend. `apiClient` fetches
 - Right panel: `<LoginForm>` wrapped in `<Suspense fallback={<LoginFormSkeleton />}>`.
 - Below the card: demo credentials hint in `<code>` elements.
 - Mobile: logo shown above the form card.
-- Metadata: `title: "Sign In — LI Boomers Panel"`.
+- Metadata: `title: "Sign In — Next Boiler Plate"`.
 
 ### Dashboard Overview (`/`)
 
@@ -1476,9 +1476,9 @@ Paste the section below to an AI agent working in the **existing website** repos
 
 ### Mission
 
-Integrate the **LI Boomers Panel** admin dashboard into this monorepo / website as a separate admin area. The public marketing website must keep working completely unchanged. The panel becomes the authenticated admin section, recommended under `/admin`.
+Integrate the **Next Boiler Plate** admin dashboard into this monorepo / website as a separate admin area. The public marketing website must keep working completely unchanged. The panel becomes the authenticated admin section, recommended under `/admin`.
 
-You have the full source of `li-boomers-panel` (this README is the complete reference). Treat it as the **source of truth** for dashboard architecture, components, and packages.
+You have the full source of `next-boiler-plate` (this README is the complete reference). Treat it as the **source of truth** for dashboard architecture, components, and packages.
 
 ### Absolute non-negotiables
 
@@ -1499,7 +1499,7 @@ src/
       (auth)/login/…
       (dashboard)/…
       api/auth/…
-  panel/                   # ALL panel code (copied from li-boomers-panel/src)
+  panel/                   # ALL panel code (copied from next-boiler-plate/src)
     components/ui/
     components/layout/
     features/

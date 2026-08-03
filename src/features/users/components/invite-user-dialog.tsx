@@ -142,7 +142,7 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
             <Input
               {...register("email")}
               type="email"
-              placeholder="jordan.lee@liboomers.com"
+              placeholder="jordan.lee@nextboilerplate.com"
               className={`h-9 text-xs rounded-xl transition-all ${
                 errors.email
                   ? "border-red-500 focus:ring-red-500"

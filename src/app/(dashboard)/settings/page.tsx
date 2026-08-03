@@ -50,11 +50,11 @@ export default function SettingsPage() {
 
   const generalForm = useForm<GeneralInput>({
     resolver: zodResolver(generalSchema),
-    defaultValues: { appName: "LI Boomers Panel", supportEmail: "support@liboomers.com" },
+    defaultValues: { appName: "Next Boiler Plate", supportEmail: "support@nextboilerplate.com" },
   })
   const profileForm = useForm<ProfileInput>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { fullName: "Admin User", email: "admin@liboomers.com" },
+    defaultValues: { fullName: "Admin User", email: "admin@nextboilerplate.com" },
   })
   const securityForm = useForm<SecurityInput>({
     resolver: zodResolver(securitySchema),

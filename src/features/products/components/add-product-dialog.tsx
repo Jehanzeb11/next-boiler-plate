@@ -180,15 +180,7 @@ export function AddProductDialog({ children }: AddProductDialogProps) {
                 control={control}
                 name="category"
                 render={({ field }) => (
-                  <Combobox
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    inputValue={field.value}
-                    onInputChange={(val) => {
-                      // allow freeform typing to filter; commit on item select
-                      field.onChange(val)
-                    }}
-                  >
+                  <Combobox value={field.value} onValueChange={field.onChange}>
                     <ComboboxInput
                       placeholder="Search category…"
                       className={`h-9 text-xs rounded-xl ${
